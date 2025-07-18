@@ -1,0 +1,72 @@
+version: '3.8'
+services:
+  # webapp config
+  web:
+    container_name: erp_app
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - ${APP_PORT}:${APP_PORT}
+    stdin_open: true
+    tty: true
+    environment:
+      - NODE_ENV=development
+      - PG_HOST=${PG_HOST}
+      - PG_USERNAME=${PG_USERNAME}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_DATABASE=${PG_DATABASE}
+      - PG_PORT=${DB_PORT}
+      - URL_DEV=http://localhost:${APP_PORT}
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      express_network:
+  # postgres config
+  db:
+    container_name: pg_database
+    restart: always
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=erp
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      express_network:
+  # dbadmin config
+  dashboard:
+    container_name: pg_admin
+    restart: always
+    image: dpage/pgadmin4:latest
+    volumes:
+      - pgadmin:/var/lib/pgadmin/data
+    depends_on:
+      - db
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=mugiwarassae02@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      - 8080:80
+    networks:
+      express_network:
+
+volumes:
+  pgdata:
+  pgadmin:
+
+networks:
+  express_network:

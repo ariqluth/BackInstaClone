@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  # webapp config
+  web:
+    container_name: erp_app
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "${PUBLIC_IP}:${APP_PORT}:3000"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - PG_HOST=${PG_HOST}
+      - PG_USERNAME=${PG_USERNAME}
+      - PG_PASSWORD=${PG_PASSWORD}
+      - PG_DATABASE=${PG_DATABASE}
+      - PG_PORT=${DB_PORT}
+      - URL_PROD=http://${PUBLIC_IP}:${APP_PORT}
+      - HOST=0.0.0.0
+      - PORT=3000
+    networks:
+      express_network:
+  # postgres config
+  db:
+    container_name: pg_database
+    restart: always
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=${PG_USERNAME}
+      - POSTGRES_PASSWORD=${PG_PASSWORD}
+      - POSTGRES_DB=${PG_DATABASE}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "${PUBLIC_IP}:${DB_PORT}:5432"
+    networks:
+      express_network:
+
+volumes:
+  pgdata:
+
+networks:
+  express_network:

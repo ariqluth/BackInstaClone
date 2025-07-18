@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id        String   @id @default(cuid()) @map("_id")
+  email     String   @unique
+  username  String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  posts    Post[]
+  likes    Like[]
+  comments Comment[]
+  stories  Story[]
+  storyViews StoryView[]
+}
+
+
+model Post {
+  id        String   @id @default(cuid()) @map("_id")
+  content   String?
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes    Like[]
+  comments Comment[]
+}
+
+
+model Like {
+  id        String   @id @default(cuid()) @map("_id")
+  createdAt DateTime @default(now())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  @@unique([userId, postId])
+}
+
+model Story {
+  id        String   @id @default(cuid()) @map("_id")
+  imageUrl  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  views  StoryView[]
+}
+
+model StoryView {
+  id        String   @id @default(cuid()) @map("_id")
+  createdAt DateTime @default(now())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storyId String
+  story   Story   @relation(fields: [storyId], references: [id], onDelete: Cascade)
+  @@unique([userId, storyId])
+}
+
+model Comment {
+  id        String   @id @default(cuid()) @map("_id")
+  text      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  postId String
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
