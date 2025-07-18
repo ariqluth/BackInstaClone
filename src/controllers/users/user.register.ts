@@ -1,9 +1,12 @@
 import { Request, Response } from "express";
+import transporter from "../../utils/util.mailer";
 import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../../utils/util.encrypt";
 import { signAccessToken } from "../../utils/util.jwt";
+import { tempMailRegister } from "../../templates/template.register";
 import { IJwt } from "../../interface/interface.jwt";
 import { expressValidator } from "../../utils/util.validator";
+import { IRegisterMail } from "../../interface/interface.templatemail";
 
 const prisma = new PrismaClient();
 
@@ -76,19 +79,37 @@ export const register = async (
 			createdAt: newUser.createdAt,
 			updatedAt: newUser.updatedAt,
 		};
+		const template: IRegisterMail = tempMailRegister(email, tokens.accessToken);
 
-		return res.status(201).json({
-			success: true,
-			message: "User registered successfully",
-			data: {
-				user: userResponse,
-				accessToken: tokens.accessToken,
-			},
-		});
+		try {
+			await transporter.sendMail({
+				from: process.env.MAIL_USERNAME,
+				to: template.to,
+				subject: template.subject,
+				html: template.html,
+			});
+
+			return res.status(201).json({
+				success: true,
+				message: "User registered successfully. Please check your email to activate your account.",
+				data: {
+					user: userResponse,
+					token: tokens.accessToken,
+				},
+			});
+		} catch (error) {
+			return res.status(500).json({
+				success: false,
+				status: res.statusCode,
+				method: req.method,
+				message: "Server error failed to sending email activation",
+			});
+		}
 	} catch (error) {
-		console.error("Registration error:", error);
 		return res.status(500).json({
 			success: false,
+			status: res.statusCode,
+			method: req.method,
 			message: "Internal server error",
 		});
 	}
