@@ -8,10 +8,13 @@ const prisma = new PrismaClient();
 // function findPosts
 export const createStory = async (req: Request, res: Response) => {
 	try {
+		const imageFile = req.files ? (req.files as any).imageUrl?.[0] : null;
+
+		const imageUrl = imageFile ? `/images/${imageFile.filename}` : null;
 		// get all posts from database
 		const storys = await prisma.story.create({
 			data: {
-				imageUrl: req.body.imageUrl,
+				imageUrl: imageUrl,
 				userId: req.body.userId,
 			},
 		});

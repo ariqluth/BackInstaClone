@@ -8,11 +8,14 @@ const prisma = new PrismaClient();
 // function findPosts
 export const createPost = async (req: Request, res: Response) => {
 	try {
+		const imageFile = req.files ? (req.files as any).imageUrl?.[0] : null;
+
+		const imageUrl = imageFile ? `/images/${imageFile.filename}` : null;
 		// get all posts from database
 		const posts = await prisma.post.create({
 			data: {
 				content: req.body.content,
-				imageUrl: req.body.imageUrl,
+				imageUrl: imageUrl,
 				authorId: req.body.authorId,
 			},
 		});
@@ -28,7 +31,8 @@ export const createPost = async (req: Request, res: Response) => {
 		res.status(500).send({
 			success: false,
 			method: req.method,
-			message: "Internal server error",
+			message: "Internal server error ",
+			detail: error.message,
 		});
 	}
 };
