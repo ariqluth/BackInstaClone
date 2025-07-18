@@ -39,7 +39,7 @@ export const tempMailReset = (to: string, token: string): IResetMail => {
           
           <!-- Header -->
           <tr>
-            <td style="background-color: #07cd10; padding: 32px 24px; text-align: center;">
+            <td style="background-color: #C13584; padding: 32px 24px; text-align: center;">
               <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600; line-height: 1.2;">
                 Instagram Clone
               </h1>
@@ -76,7 +76,7 @@ export const tempMailReset = (to: string, token: string): IResetMail => {
             <td style="padding: 0 32px 40px; text-align: center;">
               <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="margin: 0 auto;">
                 <tr>
-                  <td style="background-color: #07cd10; border-radius: 8px; box-shadow: 0 4px 12px rgba(7, 205, 16, 0.3);">
+                  <td style="background-color: #C13584; border-radius: 8px; box-shadow: 0 4px 12px rgba(7, 205, 16, 0.3);">
                     <a href="${CLIENT_URL}/api/v1/user/activation/${token}" 
                        style="display: inline-block; padding: 16px 32px; color: #ffffff; font-size: 16px; font-weight: 600; text-decoration: none; border-radius: 8px; transition: all 0.3s ease;">
                       🚀 Aktivasi Akun Sekarang

@@ -44,7 +44,7 @@ export const tempMailResend = (to: string, token: string): IResendMail => {
                 }
 
                 .container .logo {
-                    background: #07cd10;
+                    background: #C13584;
                     width: 360px;
                     height: 40px;
                     border-radius: 10px;
@@ -100,7 +100,7 @@ export const tempMailResend = (to: string, token: string): IResendMail => {
                     width: 150px;
                     height: 50px;
                     border-radius: 10px;
-                    background: #07cd10;
+                    background: #C13584;
                     position: relative;
                     top: 10px;
                     font-weight: bold;
