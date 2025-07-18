@@ -1,17 +1,16 @@
 import express, { Router } from "express";
-import { requestController } from "../controllers/story";
-import { roleJwt } from "../middlewares/middleware.role";
-import { requestValidator } from "../utils/util.validator";
+import { commentController } from "../controllers/comment";
+import { commentValidator } from "../utils/util.validator";
 const router: Router = express.Router();
 
 router.post(
 	"/request",
-	[roleJwt(), ...requestValidator()],
-	requestController.createRequest
+	[...commentValidator()],
+	commentController.createComment
 );
-router.get("/request", [roleJwt()], requestController.resultsRequest);
-router.get("/request/:id", [roleJwt()], requestController.detailRequest);
-router.delete("/request/:id", [roleJwt()], requestController.deleteRequest);
-router.put("/request/:id", [roleJwt()], requestController.updateRequest);
+router.get("/request", commentController.resultComment);
+router.get("/request/:id", commentController.detailComment);
+router.delete("/request/:id", commentController.deleteComment);
+router.put("/request/:id", commentController.updateComment);
 
 export default router;

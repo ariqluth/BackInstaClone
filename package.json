@@ -6,7 +6,7 @@
 	"scripts": {
 		"cleanup": "rimraf dist",
 		"compiler": "tsc --pretty",
-		"build": "npm run cleanup && npm run compiler",
+		"build": "npm run cleanup && prisma generate && npm run compiler",
 		"start": "node dist/server.js",
 		"dev": "nodemon -w *.ts -e ts -x ts-node --files -H -T server.ts",
 		"lint": "eslint src/**/*.ts --fix",

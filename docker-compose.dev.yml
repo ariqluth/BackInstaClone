@@ -32,22 +32,7 @@ services:
       start_period: 40s
     networks:
       express_network:
-  # postgres config
-  db:
-    container_name: pg_database
-    restart: always
-    image: postgres:latest
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=erp
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - 5432:5432
-    networks:
-      express_network:
-  # dbadmin config
+  # monggodb config
   dashboard:
     container_name: pg_admin
     restart: always
@@ -65,8 +50,6 @@ services:
       express_network:
 
 volumes:
-  pgdata:
-  pgadmin:
 
 networks:
   express_network:

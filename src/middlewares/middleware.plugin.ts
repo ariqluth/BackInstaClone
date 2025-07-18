@@ -8,8 +8,6 @@ import cors from "cors";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import slowDown from "express-slow-down";
-import { cronjob } from "./middleware.cronjob";
-import morgan from "morgan";
 
 export const pluginMiddleware = (app: Application): void => {
 	app.use(bodyParser.json());
@@ -35,8 +33,4 @@ export const pluginMiddleware = (app: Application): void => {
 			delayMs: 1500,
 		})
 	);
-	app.use(cronjob());
-	if (process.env.NODE_ENV !== "production") {
-		app.use(morgan("dev"));
-	}
 };

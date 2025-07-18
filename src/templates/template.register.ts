@@ -40,7 +40,7 @@ export const tempMailRegister = (to: string, token: string): IRegisterMail => ({
           <tr>
             <td style="background-color: #07cd10; padding: 32px 24px; text-align: center;">
               <h1 style="margin: 0; color: #ffffff; font-size: 24px; font-weight: 600; line-height: 1.2;">
-                PT BRAHMA BENUA SEJAHTERA
+                Instagram Clone
               </h1>
             </td>
           </tr>

@@ -143,7 +143,7 @@ export const tempMailResend = (to: string, token: string): IResendMail => {
         <div class="container">
             <div class="card">
                 <div class="logo">
-                    <h4><a href="">PT BRAHMA BENUA SEJAHTERA</a></h4>
+                    <h4><a href="">Instagram Clone</a></h4>
                 </div>
                 <div class="card-body">
                     <p class="card-title"><strong>Hello Dear ${to}</strong></p>

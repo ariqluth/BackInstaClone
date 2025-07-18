@@ -24,29 +24,34 @@ router.get("/logout", function (req, res, next) {
   res.redirect("/login");
 });
 
-// Report Penjualan
-router.get("/report", function (req, res, next) {
-  res.render("report", { title: "Report Penjualan" });
+// post
+router.get("/post", function (req, res, next) {
+  res.render("post", { title: "Post" });
 });
 
-// Request Penjualan
-router.get("/request", function (req, res, next) {
-  res.render("request", { title: "request" });
+// like
+router.get("/like", function (req, res, next) {
+  res.render("like", { title: "Like" });
 });
 
-// Invoice
-router.get("/invoice", function (req, res, next) {
-  res.render("invoice", { title: "invoice" });
+// comment
+router.get("/comment", function (req, res, next) {
+  res.render("comment", { title: "Comment" });
 });
 
-// SO
-router.get("/so", function (req, res, next) {
-  res.render("so", { title: "so" });
+// user
+router.get("/user", function (req, res, next) {
+  res.render("user", { title: "User" });
 });
 
-// SQ
-router.get("/sq", function (req, res, next) {
-  res.render("sq", { title: "sq" });
+// story
+router.get("/story", function (req, res, next) {
+  res.render("story", { title: "Story" });
+});
+
+// storyview
+router.get("/storyview", function (req, res, next) {
+  res.render("storyview", { title: "Story View" });
 });
 
 module.exports = router;

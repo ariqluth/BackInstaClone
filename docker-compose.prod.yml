@@ -27,23 +27,8 @@ services:
     networks:
       express_network:
   # postgres config
-  db:
-    container_name: pg_database
-    restart: always
-    image: postgres:latest
-    environment:
-      - POSTGRES_USER=${PG_USERNAME}
-      - POSTGRES_PASSWORD=${PG_PASSWORD}
-      - POSTGRES_DB=${PG_DATABASE}
-    volumes:
-      - pgdata:/var/lib/postgresql/data
-    ports:
-      - "${PUBLIC_IP}:${DB_PORT}:5432"
-    networks:
-      express_network:
 
 volumes:
-  pgdata:
 
 networks:
   express_network:
