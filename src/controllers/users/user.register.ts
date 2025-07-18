@@ -91,7 +91,8 @@ export const register = async (
 
 			return res.status(201).json({
 				success: true,
-				message: "User registered successfully. Please check your email to activate your account.",
+				message:
+					"User registered successfully. Please check your email to activate your account.",
 				data: {
 					user: userResponse,
 					token: tokens.accessToken,
