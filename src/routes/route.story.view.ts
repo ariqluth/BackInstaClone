@@ -1,17 +1,14 @@
 import express, { Router } from "express";
-import { reportController } from "../controllers/comment";
+import { storyviewController } from "../controllers/storyview";
 import { storyViewValidator } from "../utils/util.validator";
 import { roleJwt } from "../middlewares/middleware.role";
 const router: Router = express.Router();
 
 router.post(
-	"/story",
+	"/storyView",
 	[roleJwt(), ...storyViewValidator()],
-	reportController.createReport
+	storyviewController.createStoryView
 );
-router.get("/storyView", [roleJwt()], reportController.resultsReport);
-router.get("/storyView/:id", [roleJwt()], reportController.detailReport);
-router.delete("/storyView/:id", [roleJwt()], reportController.deleteReport);
-router.put("/storyView/:id", [roleJwt()], reportController.updateReport);
+router.get("/storyView/:id", [roleJwt()], storyviewController.detailStoryView);
 
 export default router;

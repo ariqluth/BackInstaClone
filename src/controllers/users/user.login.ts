@@ -3,7 +3,6 @@ import { PrismaClient } from "@prisma/client";
 import { signAccessToken } from "../../utils/util.jwt";
 import { verifyPassword } from "../../utils/util.encrypt";
 import { expressValidator } from "../../utils/util.validator";
-import { JWTPayload, UserResponseDTO } from "../../dto/dto.prisma";
 
 const prisma = new PrismaClient();
 
@@ -12,7 +11,6 @@ export const login = async (
 	res: Response
 ): Promise<Response<any>> => {
 	try {
-		// validate input
 		const errors = expressValidator(req);
 		if (errors.length > 0) {
 			return res.status(400).json({
@@ -64,7 +62,7 @@ export const login = async (
 					);
 				}
 
-				const payload: JWTPayload = {
+				const payload = {
 					user_id: user.id,
 					email: user.email,
 					username: user.username,
@@ -74,22 +72,17 @@ export const login = async (
 					expiresIn: "1d",
 				});
 
-				// Create user response DTO
-				const userResponse: UserResponseDTO = {
-					id: user.id,
-					email: user.email,
-					username: user.username,
-					name: user.name,
-					createdAt: user.createdAt,
-					updatedAt: user.updatedAt,
-				};
-
 				return resolve(
 					res.status(200).json({
 						success: true,
 						message: "Login successful",
 						data: {
-							user: userResponse,
+							user: {
+								id: user.id,
+								email: user.email,
+								username: user.username,
+								name: user.name,
+							},
 							accessToken: tokens.accessToken,
 						},
 					})

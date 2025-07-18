@@ -62,7 +62,7 @@ lfx:
 	${NPM} run lint:fix
 
 ###############################
-### KNEX MIGRATION MANUAL
+### PRISMA MIGRATION MANUAL
 ###############################
 
 KNEX := knex

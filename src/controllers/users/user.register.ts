@@ -1,82 +1,95 @@
 import { Request, Response } from "express";
-import transporter from "../../utils/util.mailer";
-import knex from "../../database";
-import { UsersDTO } from "../../dto/dto.users";
+import { PrismaClient } from "@prisma/client";
 import { hashPassword } from "../../utils/util.encrypt";
 import { signAccessToken } from "../../utils/util.jwt";
-import { tempMailRegister } from "../../templates/template.register";
-import { IRegisterMail } from "../../interface/interface.templatemail";
 import { IJwt } from "../../interface/interface.jwt";
 import { expressValidator } from "../../utils/util.validator";
+
+const prisma = new PrismaClient();
 
 export const register = async (
 	req: Request,
 	res: Response
 ): Promise<Response<any>> => {
-	const errors = expressValidator(req);
-
-	if (errors.length > 0) {
-		return res.status(400).json({
-			status: res.statusCode,
-			method: req.method,
-			errors,
-		});
-	}
-
-	const checkUserId: UsersDTO[] = await knex<UsersDTO>("users")
-		.where({ email: req.body.email })
-		.select("*");
-	if (checkUserId.length > 0) {
-		return res.status(409).json({
-			status: res.statusCode,
-			method: req.method,
-			message: "user account already exists, please try again",
-		});
-	}
-
-	const saveUser: UsersDTO[] = await knex<UsersDTO>("users")
-		.insert({
-			email: req.body.email,
-			password: hashPassword(req.body.password),
-			created_at: new Date(),
-		})
-		.returning(["user_id", "email"]);
-
-	if (Object.keys(saveUser[0]).length < 1) {
-		return res.status(400).json({
-			status: res.statusCode,
-			method: req.method,
-			message: "create new user account failed, please try again",
-		});
-	}
-
-	const { user_id, email }: UsersDTO = saveUser[0];
-	const { accessToken }: IJwt = signAccessToken()(
-		req,
-		res,
-		{ user_id: user_id, email: email },
-		{ expiresIn: "5m" }
-	);
-	const template: IRegisterMail = tempMailRegister(email, accessToken);
-
 	try {
-		await transporter.sendMail({
-			from: process.env.MAIL_USERNAME,
-			to: template.to,
-			subject: template.subject,
-			html: template.html,
+		const errors = expressValidator(req);
+		if (errors.length > 0) {
+			return res.status(400).json({
+				success: false,
+				message: "Validation errors",
+				errors: errors,
+			});
+		}
+
+		const { email, username, password, name } = req.body;
+
+		const existingUser = await prisma.user.findFirst({
+			where: {
+				OR: [{ email: email }, { username: username }],
+			},
+		});
+
+		if (existingUser) {
+			return res.status(409).json({
+				success: false,
+				message:
+					existingUser.email === email
+						? "Email already registered"
+						: "Username already taken",
+			});
+		}
+
+		const hashedPassword = hashPassword(password);
+
+		const newUser = await prisma.user.create({
+			data: {
+				email,
+				username,
+				password: hashedPassword,
+				name,
+			},
+			select: {
+				id: true,
+				email: true,
+				username: true,
+				name: true,
+				createdAt: true,
+				updatedAt: true,
+			},
+		});
+
+		const payload = {
+			user_id: newUser.id,
+			email: newUser.email,
+			username: newUser.username,
+		};
+
+		const tokens: IJwt = signAccessToken()(req, res, payload, {
+			expiresIn: "1d",
+		});
+
+		const userResponse = {
+			id: newUser.id,
+			email: newUser.email,
+			username: newUser.username,
+			name: newUser.name,
+			createdAt: newUser.createdAt,
+			updatedAt: newUser.updatedAt,
+		};
+
+		return res.status(201).json({
+			success: true,
+			message: "User registered successfully",
+			data: {
+				user: userResponse,
+				accessToken: tokens.accessToken,
+			},
 		});
 	} catch (error) {
+		console.error("Registration error:", error);
 		return res.status(500).json({
-			status: res.statusCode,
-			method: req.method,
-			message: "Server error failed to sending email activation",
+			success: false,
+			message: "Internal server error",
 		});
 	}
-
-	return res.status(201).json({
-		status: res.statusCode,
-		method: req.method,
-		message: `create new account successfuly, please check your email ${email}`,
-	});
 };

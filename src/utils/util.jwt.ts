@@ -2,7 +2,13 @@ import { Request, Response } from "express";
 import jwt, { Secret, SignOptions } from "jsonwebtoken";
 import { Base64 } from "js-base64";
 import { message } from "./util.message";
-import { JWTPayload } from "../dto/dto.prisma";
+
+// Define payload interface for Prisma User
+interface JWTPayload {
+	user_id: string;
+	email: string;
+	username: string;
+}
 
 const ACCESS_TOKEN_SECRET: Secret = process.env.ACCESS_TOKEN_SECRET;
 const REFRESH_TOKEN_SECRET: Secret = process.env.REFRESH_TOKEN_SECRET;

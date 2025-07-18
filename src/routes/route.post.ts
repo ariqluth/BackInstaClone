@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { PostController } from "../controllers/post";
+import { postController } from "../controllers/post";
 import { roleJwt } from "../middlewares/middleware.role";
 import { postValidator } from "../utils/util.validator";
 const router: Router = express.Router();
@@ -7,10 +7,10 @@ const router: Router = express.Router();
 router.post(
 	"/post",
 	[roleJwt(), ...postValidator()],
-	PostController.createPost
+	postController.createPost
 );
-router.get("/post", [roleJwt()], PostController.resultPost);
-router.delete("/post/:id", [roleJwt()], PostController.deletePost);
-router.put("/post/:id", [roleJwt()], PostController.updatePost);
+router.get("/post", [roleJwt()], postController.resultPost);
+router.delete("/post/:id", [roleJwt()], postController.deletePost);
+router.put("/post/:id", [roleJwt()], postController.updatePost);
 
 export default router;
