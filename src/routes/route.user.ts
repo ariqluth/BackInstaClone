@@ -15,6 +15,7 @@ router.post(
 	userController.register
 );
 router.post("/user/login", loginValidator(), userController.login);
+router.post("/user/logout", userController.logout);
 router.get(
 	"/user/activation/:token",
 	emailValidator(),

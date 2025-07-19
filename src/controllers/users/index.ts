@@ -4,6 +4,7 @@ import { activation } from "./user.activation";
 import { resend } from "./user.resend";
 import { forgot } from "./user.forgot";
 import { reset } from "./user.reset";
+import { logout } from "./user.logout";
 
 export const userController = {
 	register,
@@ -12,4 +13,5 @@ export const userController = {
 	resend,
 	forgot,
 	reset,
+	logout,
 };

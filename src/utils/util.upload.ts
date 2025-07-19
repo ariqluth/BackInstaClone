@@ -8,15 +8,15 @@ const diskStorage: StorageEngine = multer.diskStorage({
 		if (!file) return done(new Error("Upload file error"), null);
 
 		const fileExits = existsSync(
-			resolve(process.cwd(), `src/images/${file.originalname}`)
+			resolve(process.cwd(), `public/uploads/${file.originalname}`)
 		);
-		if (!fileExits) return done(null, resolve(process.cwd(), "src/images"));
+		if (!fileExits) return done(null, resolve(process.cwd(), "public/uploads"));
 
 		unlink(
-			resolve(process.cwd(), `src/images/${file.originalname}`),
+			resolve(process.cwd(), `public/uploads/${file.originalname}`),
 			(error: any): void => {
-				if (error) return done(null, error);
-				return done(null, resolve(process.cwd(), "src/images"));
+				if (error) return done(error, null);
+				return done(null, resolve(process.cwd(), "public/uploads"));
 			}
 		);
 	},

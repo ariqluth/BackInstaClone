@@ -10,12 +10,15 @@ export const updateStory = async (req: Request, res: Response) => {
 	try {
 		// get all posts from database
 		const { id } = req.params;
+		const imageFile = req.files ? (req.files as any).imageUrl?.[0] : null;
+
+		const imageUrl = imageFile ? `/uploads/${imageFile.filename}` : null;
 		const posts = await prisma.story.update({
 			where: {
 				id: id,
 			},
 			data: {
-				imageUrl: req.body.imageUrl,
+				imageUrl: imageUrl,
 				userId: req.body.userId,
 			},
 		});

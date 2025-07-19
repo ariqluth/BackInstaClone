@@ -10,7 +10,7 @@ export const createPost = async (req: Request, res: Response) => {
 	try {
 		const imageFile = req.files ? (req.files as any).imageUrl?.[0] : null;
 
-		const imageUrl = imageFile ? `/images/${imageFile.filename}` : null;
+		const imageUrl = imageFile ? `/uploads/${imageFile.filename}` : null;
 		// get all posts from database
 		const posts = await prisma.post.create({
 			data: {

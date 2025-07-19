@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { Application } from "express";
+import express, { Application } from "express";
 import zlib from "zlib";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
@@ -8,6 +8,7 @@ import cors from "cors";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import slowDown from "express-slow-down";
+import { resolve } from "path";
 
 export const pluginMiddleware = (app: Application): void => {
 	app.use(bodyParser.json());
@@ -15,6 +16,7 @@ export const pluginMiddleware = (app: Application): void => {
 	app.use(helmet({ contentSecurityPolicy: false }));
 	app.use(cors());
 	app.use(cookieParser());
+	app.use("/uploads", express.static(resolve(process.cwd(), "public/uploads")));
 	app.use(
 		compression({
 			level: 9,
