@@ -28,6 +28,7 @@ export const createStoryView = async (req: Request, res: Response) => {
 			success: false,
 			method: req.method,
 			message: "Internal server error",
+			detail: error.message,
 		});
 	}
 };
